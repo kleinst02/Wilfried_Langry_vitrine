@@ -6,11 +6,11 @@ Site vitrine statique (HTML / CSS / JavaScript, sans dépendance ni étape de bu
 
 | Section       | Description                                        |
 |---------------|----------------------------------------------------|
-| Accueil       | Accroche, appel à l'action, chiffres clés          |
-| À propos      | Présentation et valeurs                            |
+| Accueil       | Portrait, accroche et navigation                   |
+| À propos      | Présentation et chiffres clés                      |
 | Services      | Offres de prestation                               |
-| Références    | Exemples de missions                               |
-| Méthode       | Déroulé d'une collaboration en 4 étapes            |
+| Parcours      | Expériences professionnelles                       |
+| Compétences   | Certifications, formation, outils et langues       |
 | Contact       | Coordonnées et formulaire (ouvre la messagerie)    |
 
 Le design s'organise autour de losanges et d'un accent rouge. Il est responsive (mobile, tablette, ordinateur) et respecte la préférence « réduire les animations ».
@@ -26,7 +26,7 @@ python3 -m http.server 8000
 
 ## Personnaliser
 
-- **Textes** : tout se trouve dans `index.html` (chiffres clés, services, missions…).
+- **Textes** : tout se trouve dans `index.html` (services, parcours, compétences…).
 - **E-mail de contact** : l'adresse n'apparaît jamais en clair (protection anti-spam). Elle est stockée dans `script.js` (`EMAIL_PARTS`) en deux morceaux écrits à l'envers : la partie avant le `@`, puis le domaine. Exemple : `jean.dupont@gmail.com` → `["tnopud.naej", "moc.liamg"]`.
 - **Photo** : remplacez `assets/photo.jpg` (format carré, 640×640 px conseillé).
 - **Couleurs** : modifiez la variable `--accent` (rouge par défaut) en haut de `styles.css`.
