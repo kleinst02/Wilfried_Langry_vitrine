@@ -1,0 +1,362 @@
+<template>
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      font-family: "Montserrat", sans-serif;
+      color: var(--color-ink, #222222);
+    }
+    .s2-full {
+      position: absolute;
+      inset: 0;
+    }
+    .s2-dia {
+      clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+    }
+    .s2-w {
+      display: inline-block;
+    }
+
+    /* Le monde « usine » s'ouvre en losange depuis le losange porteur (centre 800, 800) */
+    #s2-world {
+      --r: 120px;
+      clip-path: polygon(
+        800px calc(800px - var(--r)),
+        calc(800px + var(--r)) 800px,
+        800px calc(800px + var(--r)),
+        calc(800px - var(--r)) 800px
+      );
+    }
+    #s2-paper {
+      background-color: var(--color-paper, #ffffff);
+      background-image: repeating-linear-gradient(
+        to bottom,
+        transparent 0 94px,
+        #e6e6e6 94px 96px
+      );
+    }
+
+    /* Losange porteur */
+    #s2-carrier {
+      position: absolute;
+      left: 680px;
+      top: 680px;
+      width: 240px;
+      height: 240px;
+    }
+    #s2-carrier-fill {
+      position: absolute;
+      inset: 0;
+      background: var(--color-accent, #d9202a);
+    }
+    #s2-year {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 88px;
+      height: 64px;
+      line-height: 64px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 50px;
+      letter-spacing: 0.02em;
+      color: #ffffff;
+    }
+
+    /* Titre et ligne d'information */
+    #s2-head {
+      position: absolute;
+      left: 500px;
+      top: 182px;
+    }
+    #s2-title {
+      margin: 0;
+      font-weight: 600;
+      font-size: 66px;
+      line-height: 1.12;
+      color: var(--color-ink, #222222);
+    }
+    #s2-title span.s2-line {
+      display: block;
+      white-space: nowrap;
+    }
+    .s2-slot {
+      position: absolute;
+      left: 504px;
+      top: 372px;
+      margin: 0;
+      font-weight: 600;
+      font-size: 38px;
+      letter-spacing: 0.03em;
+      color: #6b6b6b;
+      white-space: nowrap;
+    }
+    #s2-slot-b .s2-on {
+      color: var(--color-ink, #222222);
+    }
+
+    /* Tampons : encre rouge, cadre double, grain d'encre fixe */
+    .s2-stamp {
+      position: absolute;
+      transform: translate(-50%, -50%) rotate(var(--rot));
+      mix-blend-mode: multiply;
+    }
+    .s2-stamp-hit {
+      transform-origin: 50% 50%;
+    }
+    .s2-stamp-ink {
+      filter: url(#s2-ink);
+      color: var(--color-accent, #d9202a);
+      opacity: 0.95;
+      border: 5px solid currentColor;
+      outline: 2px solid currentColor;
+      outline-offset: 5px;
+      padding: 10px 30px 8px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      line-height: 1.15;
+      white-space: nowrap;
+    }
+
+    /* Grand tampon losange « 10+ ans » */
+    #s2-hero {
+      position: absolute;
+      left: 610px;
+      top: 210px;
+      width: 700px;
+      height: 700px;
+    }
+    #s2-hero-fill {
+      position: absolute;
+      inset: 0;
+      background: var(--color-accent, #d9202a);
+    }
+    #s2-hero-text {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      text-align: center;
+    }
+    #s2-hero-num {
+      font-weight: 600;
+      font-size: 200px;
+      line-height: 1;
+      letter-spacing: 0.01em;
+      margin-top: -20px;
+    }
+    #s2-hero-label {
+      margin-top: 22px;
+      font-weight: 700;
+      font-size: 38px;
+      letter-spacing: 0.14em;
+      white-space: nowrap;
+    }
+  </style>
+
+  <div id="root" data-composition-id="usine" data-width="1920" data-height="1080">
+    <svg width="0" height="0" style="position: absolute" aria-hidden="true">
+      <filter id="s2-ink" x="-10%" y="-20%" width="120%" height="140%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7" result="noise" />
+        <feColorMatrix
+          in="noise"
+          type="matrix"
+          values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -4 0 0 0 3.3"
+          result="grain"
+        />
+        <feComposite in="SourceGraphic" in2="grain" operator="in" />
+      </filter>
+    </svg>
+
+    <div id="s2-world" class="s2-full">
+      <div id="s2-paper" class="s2-full"></div>
+
+      <div id="s2-head">
+        <h2 id="s2-title">
+          <span class="s2-line">Qualité en industrie</span>
+          <span class="s2-line">agroalimentaire</span>
+        </h2>
+      </div>
+      <p id="s2-slot-a" class="s2-slot">McCain · Daunat · 2006 – 2018</p>
+      <p id="s2-slot-b" class="s2-slot">
+        <span class="s2-w" id="s2-r1">Technicien,</span>
+        <span class="s2-w" id="s2-r2">animateur,</span>
+        <span class="s2-w" id="s2-r3">puis</span>
+        <span class="s2-w" id="s2-r4">assistant</span>
+        <span class="s2-w" id="s2-r5">qualité</span>
+      </p>
+
+      <div class="s2-stamp" style="left: 430px; top: 590px; --rot: -6deg">
+        <div class="s2-stamp-hit" id="s2-st1">
+          <div class="s2-stamp-ink" style="font-size: 76px">HACCP</div>
+        </div>
+      </div>
+      <div class="s2-stamp" style="left: 1060px; top: 548px; --rot: 3deg">
+        <div class="s2-stamp-hit" id="s2-st2">
+          <div class="s2-stamp-ink" style="font-size: 44px">CERTIFICATION IFS</div>
+        </div>
+      </div>
+      <div class="s2-stamp" style="left: 1390px; top: 715px; --rot: -4deg">
+        <div class="s2-stamp-hit" id="s2-st3">
+          <div class="s2-stamp-ink" style="font-size: 48px">AUDITS INTERNES</div>
+        </div>
+      </div>
+      <div class="s2-stamp" style="left: 560px; top: 805px; --rot: 5deg">
+        <div class="s2-stamp-hit" id="s2-st4">
+          <div class="s2-stamp-ink" style="font-size: 52px">FOOD DEFENSE</div>
+        </div>
+      </div>
+      <div class="s2-stamp" style="left: 1040px; top: 878px; --rot: -2deg">
+        <div class="s2-stamp-hit" id="s2-st5">
+          <div class="s2-stamp-ink" style="font-size: 44px">ACTIONS CORRECTIVES</div>
+        </div>
+      </div>
+
+      <div id="s2-carrier">
+        <div id="s2-carrier-fill" class="s2-dia"></div>
+        <div id="s2-year">2006</div>
+      </div>
+
+      <div id="s2-hero">
+        <div id="s2-hero-fill" class="s2-dia"></div>
+        <div id="s2-hero-text">
+          <div id="s2-hero-num">10+</div>
+          <div id="s2-hero-label">ANS EN QUALITÉ</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const DUR = 8.0;
+
+      // Années : une fonction du temps de la scène, rien d'autre
+      const YEARS = [
+        [3.6, 2006, 2008],
+        [4.1, 2008, 2010],
+        [4.6, 2010, 2014],
+        [5.15, 2014, 2018],
+      ];
+      const STEP = 0.3;
+      const yearEl = document.getElementById("s2-year");
+      const yearAt = (t) => {
+        let y = YEARS[0][1];
+        for (const [start, from, to] of YEARS) {
+          if (t >= start + STEP) y = to;
+          else if (t > start) {
+            const p = (t - start) / STEP;
+            const e = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+            y = from + (to - from) * e;
+          }
+        }
+        return Math.round(y);
+      };
+      const clock = { t: 0 };
+
+      const splitWords = (el, cls) => {
+        const text = el.textContent.trim();
+        el.textContent = "";
+        text.split(/[ \n\t]+/).forEach((word) => {
+          const s = document.createElement("span");
+          s.className = cls;
+          s.textContent = word;
+          el.appendChild(s);
+          el.appendChild(document.createTextNode(" "));
+        });
+        return el.querySelectorAll("." + cls);
+      };
+      const titleWords = [];
+      document.querySelectorAll("#s2-title .s2-line").forEach((line) => {
+        splitWords(line, "s2-w").forEach((w) => titleWords.push(w));
+      });
+      const slotAWords = splitWords(document.getElementById("s2-slot-a"), "s2-w");
+
+      const tl = gsap.timeline({ paused: true });
+
+      // Horloge de scène : pilote le compteur d'années
+      tl.fromTo(
+        clock,
+        { t: 0 },
+        {
+          t: DUR,
+          duration: DUR,
+          ease: "none",
+          onUpdate: () => {
+            yearEl.textContent = yearAt(clock.t);
+          },
+        },
+        0,
+      );
+
+      // Iris en losange depuis le losange porteur
+      tl.fromTo("#s2-world", { "--r": "120px" }, { "--r": "2000px", duration: 0.55, ease: "power2.in" }, 0);
+
+      // Le losange porteur rejoint sa place, à gauche du titre
+      tl.fromTo(
+        "#s2-carrier",
+        { x: 0, y: 0 },
+        { x: -490, y: -515, duration: 0.6, ease: "power2.inOut" },
+        0.55,
+      );
+
+      // Titre mot par mot, puis la ligne d'information du gris clair à l'encre
+      tl.fromTo(
+        titleWords,
+        { opacity: 0, filter: "blur(6px)" },
+        { opacity: 1, filter: "blur(0px)", duration: 0.13, stagger: 0.067, ease: "power2.out" },
+        0.85,
+      );
+      tl.fromTo(
+        slotAWords,
+        { color: "#ffffff" },
+        { color: "#6b6b6b", duration: 0.14, stagger: 0.08, ease: "none" },
+        1.25,
+      );
+
+      // Tampons : l'encre se pose à l'impact, l'échelle s'écrase en 0,12 s
+      const hits = [1.7, 2.05, 2.4, 2.75, 3.1];
+      hits.forEach((t, i) => {
+        const el = "#s2-st" + (i + 1);
+        tl.fromTo(el, { opacity: 0 }, { opacity: 1, duration: 0.001, ease: "none" }, t);
+        tl.fromTo(el, { scale: 1.22 }, { scale: 1, duration: 0.12, ease: "power4.out" }, t);
+      });
+
+      // La ligne bascule sur la progression, synchronisée avec les années
+      tl.to("#s2-slot-a", { opacity: 0, filter: "blur(8px)", duration: 0.15, ease: "power2.in" }, 3.45);
+      tl.fromTo("#s2-slot-b", { opacity: 0 }, { opacity: 1, duration: 0.001 }, 3.58);
+      const roles = [
+        ["#s2-r1", 3.6],
+        ["#s2-r2", 4.1],
+        ["#s2-r3, #s2-r4, #s2-r5", 4.6],
+      ];
+      roles.forEach(([sel, t]) => {
+        tl.fromTo(
+          sel,
+          { opacity: 0, filter: "blur(6px)" },
+          { opacity: 1, filter: "blur(0px)", duration: 0.13, stagger: 0.067, ease: "power2.out" },
+          t,
+        );
+      });
+
+      // Le grand tampon « 10+ ANS EN QUALITÉ »
+      tl.fromTo("#s2-hero", { opacity: 0 }, { opacity: 1, duration: 0.001 }, 6.0);
+      tl.fromTo("#s2-hero", { scale: 1.22 }, { scale: 1, duration: 0.12, ease: "power4.out" }, 6.0);
+      tl.to(
+        "#s2-head, .s2-slot, .s2-stamp",
+        { opacity: 0.12, duration: 0.3, ease: "power2.out" },
+        6.0,
+      );
+
+      // Le tampon grandit jusqu'à devenir le monde rouge
+      tl.to("#s2-hero-text", { opacity: 0, filter: "blur(8px)", duration: 0.15, ease: "power2.in" }, 7.4);
+      tl.to("#s2-hero", { scale: 5, duration: 0.6, ease: "power2.inOut" }, 7.4);
+
+      window.__timelines["usine"] = tl;
+    })();
+  </script>
+</template>

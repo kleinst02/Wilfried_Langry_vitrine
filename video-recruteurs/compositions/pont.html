@@ -1,0 +1,209 @@
+<template>
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      font-family: "Montserrat", sans-serif;
+      color: var(--color-ink, #222222);
+    }
+    .s5-full {
+      position: absolute;
+      inset: 0;
+    }
+    .s5-dia {
+      clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+    }
+    .s5-w {
+      display: inline-block;
+    }
+    #s5-ground {
+      background-color: var(--color-ground, #f4f4f4);
+      background-image:
+        repeating-linear-gradient(45deg, transparent 0 178px, rgba(0, 0, 0, 0.07) 178px 180px),
+        repeating-linear-gradient(-45deg, transparent 0 178px, rgba(0, 0, 0, 0.07) 178px 180px);
+    }
+    /* La moitié « usine » : le papier réglé de la scène 2 */
+    #s5-paper {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 960px;
+      height: 1080px;
+      background-color: var(--color-paper, #ffffff);
+      background-image: repeating-linear-gradient(to bottom, transparent 0 94px, #e6e6e6 94px 96px);
+    }
+
+    .s5-head {
+      position: absolute;
+      top: 168px;
+      width: 960px;
+      margin: 0;
+      text-align: center;
+      font-weight: 600;
+      font-size: 46px;
+      letter-spacing: 0.12em;
+      color: #6b6b6b;
+      white-space: nowrap;
+    }
+    .s5-head .s5-num {
+      color: var(--color-accent, #d9202a);
+    }
+
+    /* Deux calques : à gauche de la couture, l'usine ; à droite, le CRM */
+    #s5-left {
+      clip-path: inset(0 960px 0 0);
+    }
+    #s5-right {
+      clip-path: inset(0 0 0 960px);
+    }
+    .s5-item {
+      position: absolute;
+      left: 0;
+      top: 482px;
+      margin: 0;
+      text-align: center;
+      font-weight: 600;
+      font-size: 68px;
+      line-height: 1.12;
+      white-space: nowrap;
+    }
+
+    /* La couture : le losange porteur étiré en aiguille */
+    #s5-seam {
+      position: absolute;
+      left: 840px;
+      top: 420px;
+      width: 240px;
+      height: 240px;
+    }
+    #s5-seam-fill {
+      position: absolute;
+      inset: 0;
+      background: var(--color-accent, #d9202a);
+    }
+
+    #s5-claim {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 726px;
+      margin: 0;
+      text-align: center;
+      font-weight: 600;
+      font-size: 66px;
+      white-space: nowrap;
+    }
+    #s5-claim .s5-hot {
+      color: var(--color-accent, #d9202a);
+    }
+  </style>
+
+  <div id="root" data-composition-id="pont" data-width="1920" data-height="1080">
+    <div id="s5-ground" class="s5-full"></div>
+    <div id="s5-paper"></div>
+
+    <p id="s5-head-l" class="s5-head" style="left: 0"><span class="s5-num">10+</span> ANS EN QUALITÉ</p>
+    <p id="s5-head-r" class="s5-head" style="left: 960px"><span class="s5-num">6+</span> ANS EN CRM</p>
+
+    <div id="s5-left" class="s5-full" data-layout-allow-overflow>
+      <p id="s5-a1" class="s5-item" data-layout-allow-overlap>Actions<br />correctives</p>
+      <p id="s5-a2" class="s5-item" data-layout-allow-overlap>Gestion<br />documentaire</p>
+      <p id="s5-a3" class="s5-item" data-layout-allow-overlap>Amélioration<br />continue</p>
+    </div>
+    <div id="s5-right" class="s5-full" data-layout-allow-overflow>
+      <p id="s5-b1" class="s5-item" data-layout-allow-overlap>Correction<br />des anomalies</p>
+      <p id="s5-b2" class="s5-item" data-layout-allow-overlap>Procédures<br />d'incident</p>
+      <p id="s5-b3" class="s5-item" data-layout-allow-overlap>Amélioration<br />continue</p>
+    </div>
+
+    <div id="s5-seam">
+      <div id="s5-seam-fill" class="s5-dia"></div>
+    </div>
+
+    <p id="s5-claim">La <span class="s5-hot">rigueur</span>, elle, n'a pas changé.</p>
+  </div>
+
+  <script>
+    (() => {
+      // Découpe du slogan en mots (le mot en rouge garde sa classe)
+      const claim = document.getElementById("s5-claim");
+      const nodes = Array.from(claim.childNodes);
+      claim.textContent = "";
+      nodes.forEach((node) => {
+        const hot = node.nodeType === 1 ? node.className : "";
+        node.textContent.split(/[ \n\t]+/).filter(Boolean).forEach((word) => {
+          const s = document.createElement("span");
+          s.className = "s5-w" + (hot ? " " + hot : "");
+          s.textContent = word;
+          claim.appendChild(s);
+        });
+      });
+      // Les virgules collées au mot précédent : on remet les espaces entre les mots seulement
+      Array.from(claim.querySelectorAll(".s5-w")).forEach((w, i, all) => {
+        if (i < all.length - 1 && !/^[,.]/.test(all[i + 1].textContent)) {
+          w.after(document.createTextNode(" "));
+        }
+      });
+
+      const tl = gsap.timeline({ paused: true });
+
+      // Position de départ des éléments qui traversent (centre de la moitié gauche)
+      const items = ["#s5-a1", "#s5-a2", "#s5-a3", "#s5-b1", "#s5-b2", "#s5-b3"];
+      tl.set(items, { xPercent: -50, x: 480 }, 0);
+
+      // La moitié « usine » entre par la gauche et s'arrête sur la couture
+      tl.fromTo("#s5-paper", { x: -960 }, { x: 0, duration: 0.5, ease: "power3.out" }, 0);
+      tl.fromTo(
+        "#s5-head-l, #s5-head-r",
+        { opacity: 0, filter: "blur(6px)" },
+        { opacity: 1, filter: "blur(0px)", duration: 0.16, stagger: 0.1, ease: "power2.out" },
+        0.35,
+      );
+
+      // Trois paires : le mot de l'usine traverse la couture et devient le mot du CRM
+      const pairs = [
+        ["#s5-a1", "#s5-b1", 0.7, 1.75, 3.25],
+        ["#s5-a2", "#s5-b2", 3.4, 4.45, 5.95],
+        ["#s5-a3", "#s5-b3", 6.1, 7.15, null],
+      ];
+      pairs.forEach(([a, b, tin, tcross, tout], i) => {
+        tl.fromTo(a, { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.15, ease: "power2.out" }, tin);
+        tl.fromTo(b, { opacity: 0 }, { opacity: 1, duration: 0.001 }, tin);
+        const last = i === pairs.length - 1;
+        tl.to([a, b], { x: last ? 960 : 1440, duration: last ? 0.55 : 0.6, ease: last ? "power3.out" : "power2.inOut" }, tcross);
+        // Flou de mouvement horizontal, au plus fort à mi-course
+        tl.fromTo(
+          [a, b],
+          { filter: "blur(0px)" },
+          { filter: last ? "blur(3px)" : "blur(6px)", duration: last ? 0.2 : 0.3, ease: "power2.in", yoyo: true, repeat: 1 },
+          tcross,
+        );
+        if (tout) tl.to(b, { opacity: 0, filter: "blur(8px)", duration: 0.15, ease: "power2.in" }, tout);
+      });
+
+      // « Amélioration continue » n'a pas changé : la couture n'a plus de raison d'être
+      tl.fromTo(
+        "#s5-seam",
+        { scaleX: 0.025, scaleY: 16.7, y: 0 },
+        { scaleX: 0.25, scaleY: 0.25, y: -170, duration: 0.5, ease: "power2.inOut" },
+        7.75,
+      );
+      tl.to("#s5-paper", { x: -960, duration: 0.45, ease: "power3.in" }, 7.75);
+      tl.to("#s5-head-l, #s5-head-r", { opacity: 0, filter: "blur(8px)", duration: 0.2, ease: "power2.in" }, 7.75);
+
+      // Le slogan
+      tl.fromTo(
+        "#s5-claim .s5-w",
+        { opacity: 0, filter: "blur(6px)" },
+        { opacity: 1, filter: "blur(0px)", duration: 0.13, stagger: 0.067, ease: "power2.out" },
+        8.3,
+      );
+
+      // Sortie : seul le losange reste
+      tl.to("#s5-a3, #s5-b3, #s5-claim", { opacity: 0, filter: "blur(8px)", duration: 0.2, ease: "power2.in" }, 10.8);
+
+      window.__timelines["pont"] = tl;
+    })();
+  </script>
+</template>

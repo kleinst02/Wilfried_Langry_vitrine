@@ -1,0 +1,246 @@
+<template>
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      font-family: "Montserrat", sans-serif;
+      color: var(--color-ink, #222222);
+    }
+    .s1-full {
+      position: absolute;
+      inset: 0;
+    }
+    #s1-ground {
+      background-color: var(--color-ground, #f4f4f4);
+      background-image:
+        repeating-linear-gradient(45deg, transparent 0 178px, rgba(0, 0, 0, 0.07) 178px 180px),
+        repeating-linear-gradient(-45deg, transparent 0 178px, rgba(0, 0, 0, 0.07) 178px 180px);
+    }
+    .s1-dia {
+      clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+    }
+
+    /* Portrait (losange noir du site) */
+    #s1-portrait {
+      position: absolute;
+      left: 140px;
+      top: 120px;
+      width: 840px;
+      height: 840px;
+    }
+    #s1-portrait-dia {
+      position: absolute;
+      inset: 0;
+      background: #0e0e0e;
+    }
+    #s1-photo {
+      position: absolute;
+      left: 13%;
+      top: 15%;
+      width: 74%;
+      height: 74%;
+      background: url("assets/photo.jpg") center / cover no-repeat;
+      -webkit-mask-image: radial-gradient(circle at 50% 46%, #000 52%, transparent 71%);
+      mask-image: radial-gradient(circle at 50% 46%, #000 52%, transparent 71%);
+    }
+
+    /* Nom et rôle */
+    #s1-name {
+      position: absolute;
+      left: 1030px;
+      top: 210px;
+      width: 720px;
+    }
+    #s1-name h1 {
+      margin: 0;
+      font-weight: 300;
+      font-size: 100px;
+      line-height: 1.14;
+      letter-spacing: 0.14em;
+      color: var(--color-ink, #222222);
+    }
+    #s1-name h1 span {
+      display: block;
+      white-space: nowrap;
+    }
+    #s1-rule {
+      width: 84px;
+      height: 4px;
+      margin: 34px 0 30px;
+      background: var(--color-accent, #d9202a);
+      transform-origin: 0 50%;
+    }
+    #s1-role {
+      margin: 0;
+      font-weight: 600;
+      font-size: 38px;
+      letter-spacing: 0.2em;
+      color: #333333;
+      white-space: nowrap;
+    }
+    #s1-tags {
+      margin: 18px 0 0;
+      font-family: "Open Sans", sans-serif;
+      font-weight: 400;
+      font-size: 44px;
+      letter-spacing: 0.02em;
+      color: var(--color-muted, #555555);
+      white-space: nowrap;
+    }
+    #s1-twist {
+      position: absolute;
+      left: 1030px;
+      top: 775px;
+      margin: 0;
+      font-weight: 600;
+      font-size: 60px;
+      letter-spacing: 0.01em;
+      color: var(--color-ink, #222222);
+      white-space: nowrap;
+    }
+    #s1-twist .s1-hot {
+      color: var(--color-accent, #d9202a);
+    }
+    .s1-w {
+      display: inline-block;
+    }
+
+    /* Losange porteur */
+    #s1-carrier {
+      position: absolute;
+      left: 680px;
+      top: 680px;
+      width: 240px;
+      height: 240px;
+    }
+    #s1-carrier-fill {
+      position: absolute;
+      inset: 0;
+      background: var(--color-accent, #d9202a);
+    }
+    #s1-year {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 88px;
+      height: 64px;
+      line-height: 64px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 50px;
+      letter-spacing: 0.02em;
+      color: #ffffff;
+    }
+  </style>
+
+  <div id="root" data-composition-id="aujourdhui" data-width="1920" data-height="1080">
+    <div id="s1-ground" class="s1-full"></div>
+
+    <div id="s1-portrait">
+      <div id="s1-portrait-dia" class="s1-dia">
+        <div id="s1-photo" role="img" aria-label="Portrait de Wilfried Langry"></div>
+      </div>
+    </div>
+
+    <div id="s1-name">
+      <h1><span>WILFRIED</span><span>LANGRY</span></h1>
+      <div id="s1-rule"></div>
+      <p id="s1-role">CONSULTANT SENIOR CRM</p>
+      <p id="s1-tags">Salesforce · Selligent · Data</p>
+    </div>
+
+    <p id="s1-twist">Avant le CRM&nbsp;: <span class="s1-hot">l'usine.</span></p>
+
+    <div id="s1-carrier">
+      <div id="s1-carrier-fill" class="s1-dia"></div>
+      <div id="s1-year">2026</div>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      // Compteur d'années : la valeur affichée ne dépend que du temps de la timeline
+      const yearEl = document.getElementById("s1-year");
+      const year = { v: 2026 };
+      const showYear = () => {
+        yearEl.textContent = Math.round(year.v);
+      };
+
+      // Découpe en mots (les espaces insécables restent dans le mot)
+      const splitWords = (el) => {
+        const nodes = Array.from(el.childNodes);
+        el.textContent = "";
+        nodes.forEach((node) => {
+          const text = node.textContent;
+          const hot = node.nodeType === 1 ? node.className : "";
+          text.split(/[ \n\t]+/).filter(Boolean).forEach((word) => {
+            const s = document.createElement("span");
+            s.className = "s1-w" + (hot ? " " + hot : "");
+            s.textContent = word;
+            el.appendChild(s);
+            el.appendChild(document.createTextNode(" "));
+          });
+        });
+        return el.querySelectorAll(".s1-w");
+      };
+      const roleWords = splitWords(document.getElementById("s1-role"));
+      const tagWords = splitWords(document.getElementById("s1-tags"));
+      const twistWords = splitWords(document.getElementById("s1-twist"));
+
+      const tl = gsap.timeline({ paused: true });
+
+      // Le portrait se pose (léger recul de caméra)
+      tl.fromTo("#s1-portrait", { scale: 1.04 }, { scale: 1, duration: 1.2, ease: "expo.out" }, 0);
+
+      // Trait rouge puis rôle, mot par mot
+      tl.fromTo("#s1-rule", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "expo.out" }, 0.1);
+      tl.fromTo(
+        roleWords,
+        { opacity: 0, filter: "blur(6px)" },
+        { opacity: 1, filter: "blur(0px)", duration: 0.13, stagger: 0.067, ease: "power2.out" },
+        0.2,
+      );
+
+      // Mots-clés : du gris clair à l'encre, sans déplacement
+      tl.fromTo(
+        tagWords,
+        { color: "#f4f4f4" },
+        { color: "#555555", duration: 0.14, stagger: 0.08, ease: "none" },
+        0.55,
+      );
+
+      // Le losange porteur se pose, 2026
+      tl.fromTo(
+        "#s1-carrier",
+        { opacity: 0, scale: 0.35 },
+        { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.3)" },
+        1.15,
+      );
+
+      // L'accroche
+      tl.fromTo(
+        twistWords,
+        { opacity: 0, filter: "blur(6px)" },
+        { opacity: 1, filter: "blur(0px)", duration: 0.13, stagger: 0.067, ease: "power2.out" },
+        1.75,
+      );
+
+      // Retour en arrière : 2026 -> 2006, le chiffre file (flou vertical au plus vite)
+      tl.fromTo(
+        year,
+        { v: 2026 },
+        { v: 2006, duration: 0.9, ease: "power2.inOut", onUpdate: showYear },
+        2.55,
+      );
+      tl.fromTo(
+        "#s1-year",
+        { filter: "blur(0px)" },
+        { filter: "blur(2.5px)", duration: 0.45, ease: "power2.in", yoyo: true, repeat: 1 },
+        2.55,
+      );
+
+      window.__timelines["aujourdhui"] = tl;
+    })();
+  </script>
+</template>

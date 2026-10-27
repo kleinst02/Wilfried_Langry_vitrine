@@ -1,0 +1,481 @@
+<template>
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      font-family: "Montserrat", sans-serif;
+      color: var(--color-ink, #222222);
+    }
+    .s4-full {
+      position: absolute;
+      inset: 0;
+    }
+    .s4-dia {
+      clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+    }
+    .s4-w,
+    .s4-l {
+      display: inline-block;
+    }
+    #s4-ground {
+      background-color: var(--color-ground, #f4f4f4);
+      background-image:
+        repeating-linear-gradient(45deg, transparent 0 178px, rgba(0, 0, 0, 0.07) 178px 180px),
+        repeating-linear-gradient(-45deg, transparent 0 178px, rgba(0, 0, 0, 0.07) 178px 180px);
+    }
+
+    /* Losange porteur */
+    #s4-carrier {
+      position: absolute;
+      left: 190px;
+      top: 165px;
+      width: 240px;
+      height: 240px;
+    }
+    #s4-carrier-fill {
+      position: absolute;
+      inset: 0;
+      background: var(--color-accent, #d9202a);
+    }
+    #s4-year {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 88px;
+      height: 64px;
+      line-height: 64px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 50px;
+      letter-spacing: 0.02em;
+      color: #ffffff;
+    }
+
+    .s4-over {
+      position: absolute;
+      left: 500px;
+      top: 196px;
+      margin: 0;
+      font-weight: 600;
+      font-size: 36px;
+      letter-spacing: 0.12em;
+      color: #6b6b6b;
+      white-space: nowrap;
+    }
+
+    /* 4a — Selligent et Scrum */
+    #s4-a-title {
+      position: absolute;
+      left: 494px;
+      top: 258px;
+      margin: 0;
+      font-weight: 300;
+      font-size: 104px;
+      line-height: 1.1;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+    }
+    #s4-a-line {
+      position: absolute;
+      left: 502px;
+      top: 418px;
+      margin: 0;
+      font-family: "Open Sans", sans-serif;
+      font-size: 50px;
+      color: var(--color-muted, #555555);
+      white-space: nowrap;
+    }
+    #s4-a-scrum {
+      position: absolute;
+      left: 494px;
+      top: 606px;
+      margin: 0;
+      font-weight: 300;
+      font-size: 96px;
+      line-height: 1.1;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+    }
+    .s4-stamp {
+      position: absolute;
+      transform: translate(-50%, -50%) rotate(var(--rot));
+      mix-blend-mode: multiply;
+    }
+    .s4-stamp-ink {
+      filter: url(#s4-ink);
+      color: var(--color-accent, #d9202a);
+      opacity: 0.95;
+      border: 5px solid currentColor;
+      outline: 2px solid currentColor;
+      outline-offset: 5px;
+      padding: 10px 30px 8px;
+      font-weight: 700;
+      font-size: 50px;
+      letter-spacing: 0.08em;
+      line-height: 1.15;
+      white-space: nowrap;
+    }
+    #s4-a-psm {
+      position: absolute;
+      left: 1395px;
+      top: 555px;
+      width: 220px;
+      height: 220px;
+    }
+    #s4-a-psm-fill {
+      position: absolute;
+      inset: 0;
+      background: var(--color-accent, #d9202a);
+    }
+    #s4-a-psm-text {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 82px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 46px;
+      line-height: 56px;
+      letter-spacing: 0.04em;
+      color: #ffffff;
+    }
+
+    /* 4b — Data et ETL */
+    #s4-b-title {
+      position: absolute;
+      left: 494px;
+      top: 214px;
+      margin: 0;
+      font-weight: 300;
+      font-size: 110px;
+      line-height: 1.1;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+    }
+    .s4-src {
+      position: absolute;
+      right: 1010px;
+      margin: 0;
+      font-weight: 600;
+      font-size: 52px;
+      line-height: 64px;
+      white-space: nowrap;
+    }
+    .s4-node {
+      position: absolute;
+      left: 926px;
+      width: 30px;
+      height: 30px;
+      border: 3px solid #8a8a8a;
+      transform: rotate(45deg);
+    }
+    #s4-b-svg {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1920px;
+      height: 1080px;
+      overflow: visible;
+    }
+    #s4-b-crm {
+      position: absolute;
+      left: 1230px;
+      top: 430px;
+      width: 340px;
+      height: 340px;
+    }
+    #s4-b-crm-fill {
+      position: absolute;
+      inset: 0;
+      background: var(--color-accent, #d9202a);
+    }
+    #s4-b-crm-text {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 134px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 64px;
+      line-height: 72px;
+      letter-spacing: 0.06em;
+      color: #ffffff;
+    }
+    #s4-b-sql {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 846px;
+      margin: 0;
+      text-align: center;
+      font-family: "Open Sans", sans-serif;
+      font-size: 50px;
+      color: var(--color-muted, #555555);
+      white-space: nowrap;
+    }
+
+    /* 4c — Salesforce */
+    #s4-c-title {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 414px;
+      margin: 0;
+      text-align: center;
+      font-weight: 300;
+      font-size: 186px;
+      line-height: 1.1;
+      letter-spacing: 0.07em;
+      white-space: nowrap;
+    }
+    #s4-c-sub {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 646px;
+      margin: 0;
+      text-align: center;
+      font-family: "Open Sans", sans-serif;
+      font-size: 50px;
+      color: var(--color-muted, #555555);
+      white-space: nowrap;
+    }
+    .s4-slot {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 782px;
+      margin: 0;
+      text-align: center;
+      font-weight: 600;
+      font-size: 62px;
+      line-height: 80px;
+      white-space: nowrap;
+    }
+    .s4-slot .s4-bullet {
+      display: inline-block;
+      width: 26px;
+      height: 26px;
+      margin: 0 26px 6px 0;
+      background: var(--color-accent, #d9202a);
+      transform: rotate(45deg);
+      vertical-align: middle;
+    }
+  </style>
+
+  <div id="root" data-composition-id="crm" data-width="1920" data-height="1080">
+    <svg width="0" height="0" style="position: absolute" aria-hidden="true">
+      <filter id="s4-ink" x="-10%" y="-20%" width="120%" height="140%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="11" result="noise" />
+        <feColorMatrix
+          in="noise"
+          type="matrix"
+          values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -4 0 0 0 3.3"
+          result="grain"
+        />
+        <feComposite in="SourceGraphic" in2="grain" operator="in" />
+      </filter>
+    </svg>
+
+    <div id="s4-cam" class="s4-full">
+      <div id="s4-ground" class="s4-full"></div>
+
+      <!-- 4a — Selligent CDM et Scrum Master -->
+      <div id="s4-a" class="s4-full">
+        <p id="s4-a-over" class="s4-over">2020 – 2022 · AOOMUKI, PUIS NEWBOUND</p>
+        <h2 id="s4-a-title">SELLIGENT CDM</h2>
+        <div class="s4-stamp" style="left: 1572px; top: 318px; --rot: -8deg">
+          <div id="s4-a-stamp">
+            <div class="s4-stamp-ink">CERTIFIÉ</div>
+          </div>
+        </div>
+        <p id="s4-a-line">Migrations, montées de version, évolutions</p>
+        <h2 id="s4-a-scrum">SCRUM MASTER</h2>
+        <div id="s4-a-psm">
+          <div id="s4-a-psm-fill" class="s4-dia"></div>
+          <div id="s4-a-psm-text">PSM I</div>
+        </div>
+      </div>
+
+      <!-- 4b — Data et ETL -->
+      <div id="s4-b" class="s4-full">
+        <h2 id="s4-b-title">DATA &amp; ETL</h2>
+        <svg id="s4-b-svg" viewBox="0 0 1920 1080" aria-hidden="true">
+          <path id="s4-b-l1" d="M958 494 C1090 494 1110 600 1230 600" fill="none" stroke="#8a8a8a" stroke-width="3" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100" />
+          <path id="s4-b-l2" d="M958 624 C1090 624 1110 600 1230 600" fill="none" stroke="#8a8a8a" stroke-width="3" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100" />
+          <path id="s4-b-l3" d="M958 754 C1090 754 1110 600 1230 600" fill="none" stroke="#8a8a8a" stroke-width="3" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100" />
+        </svg>
+        <p id="s4-b-s1" class="s4-src" style="top: 462px">Talend</p>
+        <p id="s4-b-s2" class="s4-src" style="top: 592px">DataStage</p>
+        <p id="s4-b-s3" class="s4-src" style="top: 722px">Pentaho</p>
+        <div id="s4-b-n1" class="s4-node" style="top: 479px"></div>
+        <div id="s4-b-n2" class="s4-node" style="top: 609px"></div>
+        <div id="s4-b-n3" class="s4-node" style="top: 739px"></div>
+        <div id="s4-b-crm">
+          <div id="s4-b-crm-fill" class="s4-dia"></div>
+          <div id="s4-b-crm-text">CRM</div>
+        </div>
+        <p id="s4-b-sql">SQL Server · Oracle · SOQL</p>
+      </div>
+
+      <!-- 4c — Salesforce -->
+      <div id="s4-c" class="s4-full">
+        <p id="s4-c-over" class="s4-over">MAGELLAN (EX-NEWBOUND) · DEPUIS 2022</p>
+        <h2 id="s4-c-title">SALESFORCE</h2>
+        <p id="s4-c-sub">Mission pour une entreprise internationale</p>
+        <p id="s4-c-i1" class="s4-slot"><span class="s4-bullet"></span>Support niveau 3</p>
+        <p id="s4-c-i2" class="s4-slot"><span class="s4-bullet"></span>Suivi hebdomadaire des KPI</p>
+        <p id="s4-c-i3" class="s4-slot"><span class="s4-bullet"></span>MCO des interfaces</p>
+      </div>
+
+      <div id="s4-carrier">
+        <div id="s4-carrier-fill" class="s4-dia"></div>
+        <div id="s4-year">2019</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const DUR = 13.25;
+
+      // Années : 2019 -> 2020 -> 2021 -> 2022 -> 2026, fonction du temps de la scène
+      const YEARS = [
+        [0.45, 2019, 2020, 0.3],
+        [2.2, 2020, 2021, 0.3],
+        [6.55, 2021, 2022, 0.3],
+        [11.2, 2022, 2026, 0.45],
+      ];
+      const yearEl = document.getElementById("s4-year");
+      const yearAt = (t) => {
+        let y = YEARS[0][1];
+        for (const [start, from, to, len] of YEARS) {
+          if (t >= start + len) y = to;
+          else if (t > start) {
+            const p = (t - start) / len;
+            const e = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+            y = from + (to - from) * e;
+          }
+        }
+        return Math.round(y);
+      };
+      const clock = { t: 0 };
+
+      const split = (el, cls, byLetter) => {
+        const text = el.textContent.trim();
+        el.textContent = "";
+        const parts = byLetter ? text.split("") : text.split(/[ \n\t]+/);
+        parts.forEach((part) => {
+          const s = document.createElement("span");
+          s.className = cls;
+          s.textContent = part === " " ? " " : part;
+          el.appendChild(s);
+          if (!byLetter) el.appendChild(document.createTextNode(" "));
+        });
+        return el.querySelectorAll("." + cls);
+      };
+      const aOver = split(document.getElementById("s4-a-over"), "s4-w");
+      const aTitle = split(document.getElementById("s4-a-title"), "s4-l", true);
+      const aLine = split(document.getElementById("s4-a-line"), "s4-w");
+      const bSql = split(document.getElementById("s4-b-sql"), "s4-w");
+      const cOver = split(document.getElementById("s4-c-over"), "s4-w");
+      const cTitle = split(document.getElementById("s4-c-title"), "s4-l", true);
+      const cSub = split(document.getElementById("s4-c-sub"), "s4-w");
+
+      const blurIn = { opacity: 1, filter: "blur(0px)", duration: 0.13, ease: "power2.out" };
+      const blurFrom = { opacity: 0, filter: "blur(6px)" };
+
+      const tl = gsap.timeline({ paused: true });
+
+      tl.fromTo(
+        clock,
+        { t: 0 },
+        {
+          t: DUR,
+          duration: DUR,
+          ease: "none",
+          onUpdate: () => {
+            yearEl.textContent = yearAt(clock.t);
+          },
+        },
+        0,
+      );
+
+      // Filé : le monde CRM arrive par la droite
+      tl.fromTo(
+        "#s4-cam",
+        { x: 1920, filter: "blur(18px)" },
+        { x: 0, filter: "blur(0px)", duration: 0.3, ease: "power3.inOut" },
+        0,
+      );
+
+      // 4a — Selligent CDM, tampon CERTIFIÉ, Scrum Master PSM I
+      tl.fromTo(aOver, { color: "#f4f4f4" }, { color: "#6b6b6b", duration: 0.14, stagger: 0.06, ease: "none" }, 0.35);
+      tl.fromTo(aTitle, { opacity: 0, filter: "blur(6px)" }, { ...blurIn, duration: 0.16, stagger: 0.03 }, 0.5);
+      tl.fromTo("#s4-a-stamp", { opacity: 0 }, { opacity: 1, duration: 0.001 }, 1.05);
+      tl.fromTo("#s4-a-stamp", { scale: 1.22 }, { scale: 1, duration: 0.12, ease: "power4.out" }, 1.05);
+      tl.fromTo(aLine, blurFrom, { ...blurIn, stagger: 0.067 }, 1.3);
+      tl.fromTo(
+        "#s4-a-scrum",
+        { clipPath: "inset(0 100% 0 0)" },
+        { clipPath: "inset(0 0% 0 0)", duration: 0.45, ease: "expo.out" },
+        1.9,
+      );
+      tl.fromTo(
+        "#s4-a-psm",
+        { opacity: 0, scale: 0.4 },
+        { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.3)" },
+        2.2,
+      );
+      tl.to("#s4-a", { opacity: 0, filter: "blur(8px)", duration: 0.2, ease: "power2.in" }, 3.3);
+
+      // 4b — Data et ETL : trois flux qui convergent vers le CRM
+      tl.fromTo("#s4-b", { opacity: 0 }, { opacity: 1, duration: 0.001 }, 3.5);
+      tl.fromTo("#s4-b-title", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power2.out" }, 3.55);
+      ["1", "2", "3"].forEach((n, i) => {
+        tl.fromTo("#s4-b-s" + n + ", #s4-b-n" + n, blurFrom, { ...blurIn, duration: 0.16 }, 3.75 + i * 0.15);
+        tl.fromTo(
+          "#s4-b-l" + n,
+          { attr: { "stroke-dashoffset": 100 } },
+          { attr: { "stroke-dashoffset": 0 }, duration: 0.5, ease: "power2.inOut" },
+          4.15 + i * 0.08,
+        );
+      });
+      tl.fromTo(
+        "#s4-b-crm",
+        { opacity: 0, scale: 0.4 },
+        { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.3)" },
+        4.6,
+      );
+      tl.fromTo(bSql, { color: "#f4f4f4" }, { color: "#555555", duration: 0.14, stagger: 0.08, ease: "none" }, 4.6);
+      tl.to("#s4-b", { opacity: 0, filter: "blur(8px)", duration: 0.2, ease: "power2.in" }, 6.3);
+
+      // 4c — Salesforce
+      tl.fromTo("#s4-c", { opacity: 0 }, { opacity: 1, duration: 0.001 }, 6.5);
+      tl.fromTo(cOver, { color: "#f4f4f4" }, { color: "#6b6b6b", duration: 0.14, stagger: 0.06, ease: "none" }, 6.55);
+      tl.fromTo(cTitle, { opacity: 0, filter: "blur(6px)" }, { ...blurIn, duration: 0.16, stagger: 0.035 }, 6.75);
+      tl.fromTo(cSub, blurFrom, { ...blurIn, stagger: 0.067 }, 7.35);
+      const slots = [
+        ["#s4-c-i1", 8.05, 9.35],
+        ["#s4-c-i2", 9.45, 11.05],
+        ["#s4-c-i3", 11.15, null],
+      ];
+      slots.forEach(([sel, tin, tout]) => {
+        tl.fromTo(sel, { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.13, ease: "power2.out" }, tin);
+        if (tout) tl.to(sel, { opacity: 0, filter: "blur(8px)", duration: 0.15, ease: "power2.in" }, tout);
+      });
+
+      // Fin : le CRM s'efface, le losange porteur rejoint le centre et devient une couture
+      tl.to("#s4-c", { opacity: 0, filter: "blur(8px)", duration: 0.2, ease: "power2.in" }, 12.55);
+      tl.to("#s4-year", { opacity: 0, duration: 0.15, ease: "power2.in" }, 12.55);
+      tl.to(
+        "#s4-carrier",
+        { x: 650, y: 255, scaleX: 0.025, scaleY: 16.7, duration: 0.6, ease: "power2.inOut" },
+        12.65,
+      );
+
+      window.__timelines["crm"] = tl;
+    })();
+  </script>
+</template>

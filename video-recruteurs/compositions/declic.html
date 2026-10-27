@@ -1,0 +1,242 @@
+<template>
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      font-family: "Montserrat", sans-serif;
+      color: #ffffff;
+    }
+    .s3-full {
+      position: absolute;
+      inset: 0;
+    }
+    #s3-ground {
+      background: var(--color-accent, #d9202a);
+    }
+
+    /* Losange porteur, au trait blanc sur le rouge */
+    #s3-carrier {
+      position: absolute;
+      left: 190px;
+      top: 165px;
+      width: 240px;
+      height: 240px;
+    }
+    #s3-carrier svg {
+      position: absolute;
+      inset: 0;
+      overflow: visible;
+    }
+    #s3-year {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 88px;
+      height: 64px;
+      line-height: 64px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 50px;
+      letter-spacing: 0.02em;
+      color: #ffffff;
+    }
+
+    #s3-big {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 392px;
+      margin: 0;
+      text-align: center;
+      font-weight: 300;
+      font-size: 146px;
+      line-height: 1;
+      letter-spacing: 0.12em;
+      white-space: nowrap;
+    }
+    .s3-l {
+      display: inline-block;
+    }
+
+    /* Ligne de code : le titre du site vitrine, tapé caractère par caractère */
+    #s3-code-wrap {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 610px;
+      text-align: center;
+    }
+    #s3-code {
+      --n: 0;
+      position: relative;
+      display: inline-block;
+      font-family: "JetBrains Mono", monospace;
+      font-weight: 400;
+      font-size: 44px;
+      line-height: 64px;
+      text-align: left;
+    }
+    #s3-code-text {
+      white-space: pre;
+      clip-path: inset(0 calc(100% - var(--n) * 1ch) 0 0);
+    }
+    #s3-code .s3-tag {
+      color: #ffe3e4;
+    }
+    #s3-caret {
+      position: absolute;
+      top: 8px;
+      left: calc(var(--n) * 1ch);
+      width: 6px;
+      height: 48px;
+      background: #ffffff;
+    }
+
+    #s3-cap {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 766px;
+      margin: 0;
+      text-align: center;
+      font-weight: 600;
+      font-size: 52px;
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+    }
+    .s3-w {
+      display: inline-block;
+    }
+  </style>
+
+  <div id="root" data-composition-id="declic" data-width="1920" data-height="1080">
+    <div id="s3-cam" class="s3-full">
+      <div id="s3-ground" class="s3-full"></div>
+
+      <div id="s3-carrier">
+        <svg viewBox="0 0 240 240" width="240" height="240" aria-hidden="true">
+          <polygon
+            id="s3-carrier-line"
+            points="120,3 237,120 120,237 3,120"
+            fill="none"
+            stroke="#ffffff"
+            stroke-width="5"
+            stroke-linejoin="miter"
+            pathLength="100"
+            stroke-dasharray="100"
+            stroke-dashoffset="100"
+          />
+        </svg>
+        <div id="s3-year">2018</div>
+      </div>
+
+      <h2 id="s3-big">RECONVERSION</h2>
+
+      <div id="s3-code-wrap">
+        <div id="s3-code">
+          <div id="s3-code-text"><span class="s3-tag">&lt;h1&gt;</span>Des outils qui travaillent pour vous<span class="s3-tag">&lt;/h1&gt;</span></div>
+          <div id="s3-caret"></div>
+        </div>
+      </div>
+
+      <p id="s3-cap">Titre pro Développeur web · La Manu</p>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const DUR = 3.75;
+      const CHARS = 45; // <h1>Des outils qui travaillent pour vous</h1>
+
+      const yearEl = document.getElementById("s3-year");
+      const clock = { t: 0 };
+      const yearAt = (t) => {
+        const start = 0.25;
+        const len = 0.3;
+        if (t <= start) return 2018;
+        if (t >= start + len) return 2019;
+        return Math.round(2018 + (t - start) / len);
+      };
+
+      const big = document.getElementById("s3-big");
+      const letters = big.textContent.trim().split("");
+      big.textContent = "";
+      letters.forEach((ch) => {
+        const s = document.createElement("span");
+        s.className = "s3-l";
+        s.textContent = ch;
+        big.appendChild(s);
+      });
+      const cap = document.getElementById("s3-cap");
+      const capWords = cap.textContent.trim().split(/[ \n\t]+/);
+      cap.textContent = "";
+      capWords.forEach((w) => {
+        const s = document.createElement("span");
+        s.className = "s3-w";
+        s.textContent = w;
+        cap.appendChild(s);
+        cap.appendChild(document.createTextNode(" "));
+      });
+
+      const tl = gsap.timeline({ paused: true });
+
+      tl.fromTo(
+        clock,
+        { t: 0 },
+        {
+          t: DUR,
+          duration: DUR,
+          ease: "none",
+          onUpdate: () => {
+            yearEl.textContent = yearAt(clock.t);
+          },
+        },
+        0,
+      );
+
+      // Le losange porteur se redessine au trait
+      tl.fromTo(
+        "#s3-carrier-line",
+        { attr: { "stroke-dashoffset": 100 } },
+        { attr: { "stroke-dashoffset": 0 }, duration: 0.45, ease: "power2.inOut" },
+        0,
+      );
+
+      // L'année revient avec le trait
+      tl.fromTo("#s3-year", { opacity: 0 }, { opacity: 1, duration: 0.25, ease: "power2.out" }, 0.1);
+
+      // RECONVERSION, lettre par lettre (0,3 -> 1 avec un léger flou)
+      tl.fromTo(
+        "#s3-big .s3-l",
+        { opacity: 0.3, filter: "blur(4px)" },
+        { opacity: 1, filter: "blur(0px)", duration: 0.16, stagger: 0.035, ease: "power2.out" },
+        0.3,
+      );
+      tl.fromTo("#s3-big", { opacity: 0 }, { opacity: 1, duration: 0.001 }, 0.3);
+
+      // Le code se tape : un caractère à la fois
+      tl.fromTo("#s3-code-wrap", { opacity: 0 }, { opacity: 1, duration: 0.001 }, 0.95);
+      tl.fromTo("#s3-code", { "--n": 0 }, { "--n": CHARS, duration: 1.3, ease: "steps(" + CHARS + ")" }, 1.0);
+      tl.to("#s3-caret", { opacity: 0, duration: 0.001 }, 2.75);
+
+      // La formation
+      tl.fromTo(
+        "#s3-cap .s3-w",
+        { opacity: 0, filter: "blur(6px)" },
+        { opacity: 1, filter: "blur(0px)", duration: 0.13, stagger: 0.067, ease: "power2.out" },
+        1.15,
+      );
+
+      // Filé vers la gauche : le monde rouge part, le CRM arrive (scène suivante)
+      tl.fromTo(
+        "#s3-cam",
+        { x: 0, filter: "blur(0px)" },
+        { x: -1920, filter: "blur(18px)", duration: 0.3, ease: "power3.inOut" },
+        DUR - 0.3,
+      );
+
+      window.__timelines["declic"] = tl;
+    })();
+  </script>
+</template>

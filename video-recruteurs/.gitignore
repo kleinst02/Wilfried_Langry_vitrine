@@ -1,0 +1,7 @@
+# État local et captures de travail de HyperFrames
+.hyperframes/
+node_modules/
+
+# Rendus : seul le film final est conservé
+renders/*
+!renders/wilfried-langry-recruteurs.mp4
