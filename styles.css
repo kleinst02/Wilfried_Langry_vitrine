@@ -352,3 +352,15 @@ a.contact-line:hover { color: #fff; text-decoration: underline; }
   .construction .btn-outline { grid-area: btn; align-self: start; justify-self: center; }
   .construction-dia { grid-area: dia; width: min(520px, calc(100svh - 32px), 55vw); min-width: 0; }
 }
+
+/* ========== Textes justifiés ========== */
+/* Césure automatique (langue fr) pour éviter les grands blancs dans les colonnes étroites */
+.intro, .service p, .about-text p, .steps p, .case p:not(.case-sector):not(.case-result) {
+  text-align: justify;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+/* Dans les blocs centrés, la dernière ligne reste centrée */
+.intro, .service p, .about-text p, .steps p { text-align-last: center; }
+/* Noms propres et noms d'outils : jamais coupés */
+.nh { -webkit-hyphens: manual; hyphens: manual; white-space: nowrap; }
