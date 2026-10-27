@@ -13,6 +13,8 @@ Site vitrine statique (HTML / CSS / JavaScript, sans dépendance ni étape de bu
 | Compétences   | Certifications, formation, outils et langues       |
 | Contact       | Coordonnées et formulaire (ouvre la messagerie)    |
 
+La page `portfolio.html` (« Page en construction », même design) est reliée au lien « Voir mon portfolio » du pied de page.
+
 Le design s'organise autour de losanges et d'un accent rouge. Il est responsive (mobile, tablette, ordinateur) et respecte la préférence « réduire les animations ».
 
 ## Prévisualiser en local
