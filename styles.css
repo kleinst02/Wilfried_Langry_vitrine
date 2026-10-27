@@ -267,3 +267,53 @@ a.contact-line:hover { color: #fff; text-decoration: underline; }
 @media (min-width: 1000px) { .case { flex-basis: 240px; } }
 .case-sector span { display: block; color: var(--accent); }
 .case-sector .former { font-size: inherit; white-space: nowrap; }
+
+/* ========== Pages plein écran ========== */
+/* Chaque section occupe au moins toute la hauteur de l'écran, contenu centré verticalement */
+.section, .about, .contact { min-height: 100vh; min-height: 100svh; }
+.section { display: flex; flex-direction: column; justify-content: center; }
+.section > .container { width: 100%; }
+.about-text, .contact-form-wrap { justify-content: center; }
+.about-stats, .contact-card { min-height: 0; }
+
+/* Sur ordinateur, les espacements verticaux suivent la hauteur de l'écran pour que chaque page tienne */
+@media (min-width: 821px) {
+  .section { padding-top: clamp(36px, 8vh, 112px); padding-bottom: clamp(36px, 8vh, 112px); }
+  .title-mark { margin-bottom: clamp(14px, 2.8vh, 28px); }
+  .rule { margin: clamp(10px, 2.2vh, 22px) 0 clamp(12px, 2.6vh, 26px); }
+  .intro { margin-bottom: clamp(20px, 6vh, 64px); }
+  .services { gap: clamp(28px, 5vh, 56px) 32px; }
+  .service { flex-basis: 190px; }
+  .icon-dia { width: clamp(68px, 10.5vh, 104px); height: clamp(68px, 10.5vh, 104px); margin: clamp(12px, 2.4vh, 24px) 0 clamp(22px, 4.4vh, 44px); }
+  .service h3 { margin-bottom: clamp(8px, 1.4vh, 14px); }
+  .service p { margin-bottom: clamp(12px, 2.4vh, 24px); }
+  .about-text { padding-top: clamp(36px, 8vh, 88px); padding-bottom: clamp(36px, 8vh, 88px); }
+  .about-text p { margin-bottom: clamp(8px, 1.6vh, 16px); }
+  .about-text p:last-of-type { margin-bottom: clamp(16px, 3.6vh, 36px); }
+  .about-stats { padding-top: 32px; padding-bottom: 32px; }
+  .cases { gap: 24px; }
+  .case { flex-basis: 200px; padding: clamp(22px, 4.4vh, 44px) clamp(18px, 2vw, 28px) clamp(20px, 4vh, 40px); }
+  .case::after { border-top-width: clamp(36px, 5vh, 56px); border-left-width: clamp(36px, 5vh, 56px); }
+  .case h3 { margin-bottom: clamp(6px, 1.2vh, 12px); }
+  .case .case-result { margin-top: clamp(10px, 2vh, 20px); }
+  .steps { margin-top: clamp(8px, 3.8vh, 38px); gap: 24px 32px; }
+  .step-dia { margin: 8px 0 clamp(16px, 3.2vh, 32px); }
+  .tags { margin-top: clamp(24px, 6vh, 72px); }
+  .languages { margin-top: clamp(12px, 3vh, 32px); }
+  .contact-form-wrap { padding-top: clamp(32px, 7vh, 88px); padding-bottom: clamp(32px, 7vh, 88px); }
+  .contact-form-wrap > p { margin-bottom: clamp(16px, 4vh, 40px); }
+  .contact-form { gap: clamp(8px, 1.6vh, 16px); }
+  .contact-form textarea { height: clamp(80px, 15vh, 150px); }
+}
+@media (min-width: 821px) and (max-height: 800px) {
+  body { line-height: 1.65; }
+  .section { padding-top: max(28px, 5.5vh); padding-bottom: max(28px, 5.5vh); }
+  .case h3 { font-size: 16px; }
+  .case p, .service p, .steps p { font-size: 13.5px; }
+}
+
+/* Sur ordinateur, le défilement s'aligne doucement sur le haut des pages */
+@media (min-width: 821px) and (min-height: 600px) {
+  html { scroll-snap-type: y proximity; }
+  .hero, .section, .about, .contact, .site-footer { scroll-snap-align: start; }
+}
