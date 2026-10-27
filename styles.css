@@ -312,9 +312,9 @@ a.contact-line:hover { color: #fff; text-decoration: underline; }
   .case p, .service p, .steps p { font-size: 13.5px; }
 }
 
-/* Sur ordinateur, le défilement s'aligne doucement sur le haut des pages */
+/* Sur ordinateur, quand le défilement s'arrête entre deux pages, l'affichage se recentre sur la plus proche */
 @media (min-width: 821px) and (min-height: 600px) {
-  html { scroll-snap-type: y proximity; }
+  html { scroll-snap-type: y mandatory; }
   .hero, .section, .about, .contact, .site-footer { scroll-snap-align: start; }
 }
 
