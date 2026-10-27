@@ -98,7 +98,8 @@ h2 { font-family: var(--display); font-weight: 300; font-size: 30px; letter-spac
 .send-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linejoin: round; }
 
 /* ========== Accueil ========== */
-.hero { position: relative; display: flex; flex-wrap: wrap; background-color: var(--bg-hero); border-bottom: 1px solid var(--line); overflow: hidden; }
+/* La première page occupe exactement la hauteur de l'écran */
+.hero { position: relative; display: flex; flex-wrap: wrap; min-height: 100vh; min-height: 100svh; background-color: var(--bg-hero); border-bottom: 1px solid var(--line); overflow: hidden; }
 .hero-side { flex: 0 0 240px; padding: 56px 24px; display: flex; flex-direction: column; align-items: center; gap: 48px; position: relative; z-index: 2; }
 .brand { display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; }
 .brand-name { font-family: var(--display); font-weight: 300; font-size: 17px; letter-spacing: 0.2em; margin-top: 6px; }
@@ -107,10 +108,11 @@ h2 { font-family: var(--display); font-weight: 300; font-size: 30px; letter-spac
 .main-nav a { min-height: 44px; display: flex; align-items: center; }
 .main-nav a:hover { color: var(--accent); }
 
-.hero-stage { flex: 1 1 600px; min-width: 0; position: relative; min-height: 760px; display: flex; align-items: center; justify-content: center; padding: 48px 24px; }
+.hero-stage { flex: 1 1 600px; min-width: 0; position: relative; display: flex; align-items: center; justify-content: center; padding: 48px 80px 48px 24px; }
 .deco-red { left: -120px; bottom: -140px; width: 360px; height: 360px; background: var(--accent); }
 .deco-grey { right: 8%; top: -160px; width: 420px; height: 420px; background: var(--bg-card); }
-.hero-visual { position: relative; width: min(600px, 82%); aspect-ratio: 1 / 1; }
+/* Le portrait et le losange rouge (qui dépasse de 26 % à droite) sont centrés ensemble */
+.hero-visual { position: relative; width: min(760px, 76%, calc(100vh - 150px)); width: min(760px, 76%, calc(100svh - 150px)); aspect-ratio: 1 / 1; translate: -13% 0; }
 .portrait { width: 100%; height: 100%; background: #0E0E0E; display: flex; align-items: center; justify-content: center; }
 .portrait img {
   width: 74%; height: 74%; object-fit: cover; margin-top: 4%;
@@ -215,15 +217,38 @@ a.contact-line:hover { color: #fff; text-decoration: underline; }
   .dots { display: none; }
   .hero-side { flex-basis: 100%; padding: 40px 24px 0; gap: 24px; }
   .main-nav { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 0 20px; }
-  .hero-stage { min-height: 0; padding: 32px 24px 120px; }
+  .hero-stage { padding: 32px 24px; }
+  /* le losange rouge dépasse sous le portrait d'environ 30 % de sa largeur */
+  .hero-visual { width: min(600px, 82%); margin-bottom: min(190px, 26%); translate: -7% 0; }
   .deco-red { width: 220px; height: 220px; left: -110px; bottom: -110px; }
   .deco-grey { width: 260px; height: 260px; top: -130px; }
   .hero-red { width: 74%; right: -14%; top: 56%; }
   .contact-dia { width: 128%; max-width: 520px; }
   .section { padding: 80px 20px; }
   .about-text, .contact-form-wrap { padding: 72px 24px; }
-  .about-stats { min-height: 0; padding: 72px 16px; }
-  .stat { margin: -10px -14px; }
+  .about-stats { min-height: 0; padding: 72px 16px; --s: 160px; }
+  .stat { width: var(--s); height: var(--s); margin: 0; }
+  .corner { border-top-width: 110px; border-left-width: 110px; }
+}
+
+/* Petit écran : deux losanges en haut, le troisième emboîté dessous */
+@media (max-width: 600px) {
+  .about-stats {
+    --s: min(160px, calc((100vw - 48px) * 0.42));
+    display: grid; grid-template-columns: repeat(2, var(--s)); justify-content: center; align-content: center;
+    padding: 64px 16px;
+  }
+  .stat:last-child { grid-column: 1 / -1; justify-self: center; margin-top: calc(var(--s) * -0.3); }
+  .stat-value { font-size: calc(var(--s) * 0.24); }
+  .stat-label { font-size: 9.5px; letter-spacing: 0.1em; }
+}
+
+/* Écrans peu hauts (téléphone à l'horizontale) : menu plus compact */
+@media (max-height: 520px) and (min-width: 821px) {
+  .hero-side { padding: 20px 16px; gap: 14px; }
+  .brand { gap: 8px; }
+  .main-nav { gap: 0; }
+  .deco-red { width: 180px; height: 180px; left: -110px; bottom: -110px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
